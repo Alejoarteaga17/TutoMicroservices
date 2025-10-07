@@ -11,17 +11,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Docker Login
+      - name: Log in to Docker Hub
         env:
           DOCKER_USER: ${{ secrets.DOCKERHUB_USER }}
           DOCKER_PASS: ${{ secrets.DOCKERHUB_PASS }}
-        run: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASS
+        run: echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag alejoarteh05/tutomicroservices:latest
+      - name: Build Docker image
+        run: docker build -t alejoarteh05/tutomicroservices:latest .
 
-      - name: Docker Push
+      - name: Push Docker image
         run: docker push alejoarteh05/tutomicroservices:latest
